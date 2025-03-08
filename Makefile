@@ -13,10 +13,3 @@ package: build
 # Clean build artifacts
 clean:
 	@rm -rf dist naturaltime-js.tar.gz node_modules
-
-# Release: Builds, commits the generated JS, and pushes the updated tag
-release: build
-	@git add dist/naturaltime.out.js
-	@git commit -m "Add generated JS for release"
-	@git tag -f $(shell git describe --tags --abbrev=0)  # Force update the latest tag
-	@git push origin $(shell git describe --tags --abbrev=0) --force

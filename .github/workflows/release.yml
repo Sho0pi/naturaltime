@@ -3,7 +3,11 @@ name: Release Go Module
 on:
   push:
     tags:
-      - 'v*'  # Runs only when a new version tag (e.g., v1.0.0) is pushed
+      - 'v*-pre'  # Trigger only on tags with the '-pre' suffix (e.g., v1.0.0-pre)
+
+# Grant write permissions to the GITHUB_TOKEN
+permissions:
+  contents: write  # Allows creating, pushing, and deleting tags
 
 jobs:
   build-and-release:
@@ -14,7 +18,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Allows pushing updated tags
+          fetch-depth: 0  # Fetch all history and tags
 
       - name: Set up Go
         uses: actions/setup-go@v5
@@ -33,14 +37,41 @@ jobs:
       - name: Build JavaScript file
         run: make build
 
-      - name: Commit generated file to the tag
+      - name: Commit generated file
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
+
+          # Add the generated file to the repository
           git add dist/naturaltime.out.js -f
-          git commit -m "Add generated JS for release ${{ github.ref_name }}"
-          git tag -f ${{ github.ref_name }}
-          git push origin ${{ github.ref_name }} --force
+          git commit -m "Add generated JS for release"
+
+      - name: Create new tag without '-pre'
+        id: create-tag
+        run: |
+          # Extract the tag name (e.g., v1.0.0-pre)
+          PRE_TAG="${{ github.ref_name }}"
+
+          # Remove the '-pre' suffix to create the new tag (e.g., v1.0.0)
+          NEW_TAG="${PRE_TAG%-pre}"
+          echo "New tag: $NEW_TAG"
+
+          # Create the new tag
+          git tag "$NEW_TAG"
+
+          # Push the new tag to the repository
+          git push origin "$NEW_TAG"
+
+          # Output the new tag for use in later steps
+          echo "new_tag=$NEW_TAG" >> $GITHUB_OUTPUT
+
+      - name: Delete the '-pre' tag
+        run: |
+          # Extract the original '-pre' tag name
+          PRE_TAG="${{ github.ref_name }}"
+
+          # Delete the '-pre' tag from the repository
+          git push --delete origin "$PRE_TAG"
 
       - name: Package generated file
         run: tar -czvf naturaltime-js.tar.gz dist/naturaltime.out.js
@@ -49,8 +80,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: naturaltime-js.tar.gz
-          tag_name: ${{ github.ref }}
-          name: "Release ${{ github.ref_name }}"
-          body: "Automated release for ${{ github.ref_name }}"
+          tag_name: ${{ steps.create-tag.outputs.new_tag }}  # Use the new tag
+          name: "Release ${{ steps.create-tag.outputs.new_tag }}"
+          body: "Automated release for ${{ steps.create-tag.outputs.new_tag }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
