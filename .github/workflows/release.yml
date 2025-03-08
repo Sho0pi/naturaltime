@@ -1,0 +1,56 @@
+name: Release Go Module
+
+on:
+  push:
+    tags:
+      - 'v*'  # Runs only when a new version tag (e.g., v1.0.0) is pushed
+
+jobs:
+  build-and-release:
+    name: Build and Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Allows pushing updated tags
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'  # Cache dependencies for faster builds
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build JavaScript file
+        run: make build
+
+      - name: Commit generated file to the tag
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add dist/naturaltime.out.js
+          git commit -m "Add generated JS for release ${{ github.ref_name }}"
+          git tag -f ${{ github.ref_name }}
+          git push origin ${{ github.ref_name }} --force
+
+      - name: Package generated file
+        run: tar -czvf naturaltime-js.tar.gz dist/naturaltime.out.js
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: naturaltime-js.tar.gz
+          tag_name: ${{ github.ref }}
+          name: "Release ${{ github.ref_name }}"
+          body: "Automated release for ${{ github.ref_name }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
