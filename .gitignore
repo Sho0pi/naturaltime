@@ -27,5 +27,3 @@ go.work.sum
 dist/
 .idea/
 node_modules/
-
-package-lock.json
