@@ -1,0 +1,59 @@
+name: Test NaturalTime
+
+on:
+  pull_request:
+    branches: [ master ]
+  push:
+    branches: [ master ]
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '.gitignore'
+
+jobs:
+  test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install Node.js dependencies
+        run: npm ci
+
+      - name: Build JavaScript file
+        run: make build
+
+      - name: Verify generated files
+        run: |
+          if [ ! -f "dist/naturaltime.out.js" ]; then
+            echo "Error: Generated JavaScript file is missing"
+            exit 1
+          fi
+
+      - name: Run go fmt
+        run: |
+          go fmt ./...
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "Error: Go code is not properly formatted. Run 'go fmt ./...' locally."
+            git status --porcelain
+            exit 1
+          fi
+
+      - name: Run go vet
+        run: go vet ./...
+
+      - name: Run tests
+        run: go test -v -race ./...
