@@ -40,8 +40,11 @@ func (r Range) ContainsRange(other Range) bool {
 }
 
 // Overlaps checks if this range overlaps with another range.
+// Two ranges overlap if they share any common time point.
+// Note: If 'other' starts exactly at the same time as r.End(), it is not considered an overlap.
+// Similarly, if r starts exactly at the same time as other.End(), it is also not considered an overlap.
 func (r Range) Overlaps(other Range) bool {
-	return !r.End().Before(other.start) && !r.start.After(other.End())
+	return !r.End().Before(other.start) && !r.start.After(other.End()) && !r.End().Equal(other.Start()) && !other.End().Equal(r.Start())
 }
 
 // Intersection returns the overlapping range between two ranges,

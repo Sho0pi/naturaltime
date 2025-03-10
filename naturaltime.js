@@ -1,11 +1,11 @@
 const chrono = require('chrono-node');
 
 function parseDate(expression, date) {
-    return chrono.parseDate(expression, date ? new Date(date) : new Date())
+    return chrono.parseDate(expression, new Date(date))
 }
 
 function parseRange(expression, date) {
-    return chrono.parse(expression, date ? new Date(date) : new Date()).map(res => {
+    return chrono.parse(expression, new Date(date)).map(res => {
         let result = {};
 
         if (res.start) result.start = res.start.date();
