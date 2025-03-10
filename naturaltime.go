@@ -72,13 +72,13 @@ func New() (*Parser, error) {
 //
 // Parameters:
 //   - expr: The natural language expression to parse
-//   - now: The reference time for relative expressions
+//   - base: The reference time for relative expressions
 //
 // Returns:
 //   - A pointer to the parsed time.Time, or nil if the expression could not be parsed
 //   - An error if parsing fails
-func (p *Parser) ParseDate(expr string, now time.Time) (*time.Time, error) {
-	result, err := p.parseDateFunc(p.thisContext, p.runtime.ToValue(expr), p.runtime.ToValue(now.Format(time.RFC3339)))
+func (p *Parser) ParseDate(expr string, base time.Time) (*time.Time, error) {
+	result, err := p.parseDateFunc(p.thisContext, p.runtime.ToValue(expr), p.runtime.ToValue(base.Format(time.RFC3339)))
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse date expression %q: %w", expr, err)
 	}
@@ -97,13 +97,13 @@ func (p *Parser) ParseDate(expr string, now time.Time) (*time.Time, error) {
 //
 // Parameters:
 //   - expr: The natural language expression to parse
-//   - now: The reference time for relative expressions
+//   - base: The reference time for relative expressions
 //
 // Returns:
 //   - A pointer to the parsed Range
 //   - An error if parsing fails or if multiple ranges are returned
-func (p *Parser) ParseRange(expr string, now time.Time) (*Range, error) {
-	ranges, err := p.ParseMulti(expr, now)
+func (p *Parser) ParseRange(expr string, base time.Time) (*Range, error) {
+	ranges, err := p.ParseMulti(expr, base)
 	if err != nil {
 		return nil, err
 	}
@@ -119,13 +119,13 @@ func (p *Parser) ParseRange(expr string, now time.Time) (*Range, error) {
 //
 // Parameters:
 //   - expr: The natural language expression to parse
-//   - now: The reference time for relative expressions
+//   - base: The reference time for relative expressions
 //
 // Returns:
 //   - A slice of Range objects
 //   - An error if parsing fails
-func (p *Parser) ParseMulti(expr string, now time.Time) ([]Range, error) {
-	result, err := p.parseRangeFunc(p.thisContext, p.runtime.ToValue(expr), p.runtime.ToValue(now.Format(time.RFC3339)))
+func (p *Parser) ParseMulti(expr string, base time.Time) ([]Range, error) {
+	result, err := p.parseRangeFunc(p.thisContext, p.runtime.ToValue(expr), p.runtime.ToValue(base.Format(time.RFC3339)))
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse range expression %q: %w", expr, err)
 	}
