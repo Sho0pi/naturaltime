@@ -6,6 +6,18 @@
 
 A powerful Go library for parsing natural language time expressions with exceptional support for time ranges! NaturalTime is a wrapper around the excellent [chrono-node](https://github.com/wanasit/chrono) JavaScript library, providing Go developers with advanced natural language time parsing capabilities.
 
+
+## 🚧 Go Native Development
+
+We're excited to announce active development on a pure Go implementation in the [`native-go` branch](https://github.com/sho0pi/naturaltime/tree/native-go)! 
+
+👉 **Help us build** a JavaScript-free version with:
+- Better performance
+- Stronger type safety
+- Simplified deployment
+
+Check out our [development roadmap](https://github.com/sho0pi/naturaltime/issues?q=is%3Aissue+label%3Anative-go) and consider contributing!
+
 ## ✨ Features
 
 - Parse natural language date expressions into `time.Time` objects
