@@ -1,18 +1,19 @@
-# NaturalTime 🕒
+
+# NaturalTime 🕒 (Native Go Implementation)
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/sho0pi/naturaltime.svg)](https://pkg.go.dev/github.com/sho0pi/naturaltime)
 [![Go Report Card](https://goreportcard.com/badge/github.com/sho0pi/naturaltime)](https://goreportcard.com/report/github.com/sho0pi/naturaltime)
 
-
-A powerful Go library for parsing natural language time expressions with exceptional support for time ranges! NaturalTime is a wrapper around the excellent [chrono-node](https://github.com/wanasit/chrono) JavaScript library, providing Go developers with advanced natural language time parsing capabilities.
+**A pure Go library for parsing natural language time expressions!** This native Go implementation eliminates JavaScript dependencies while maintaining advanced time parsing capabilities.
 
 ## ✨ Features
 
-- Parse natural language date expressions into `time.Time` objects
+- 100% Go implementation - no JavaScript runtime!
+- Parse natural language dates into `time.Time` objects
 - Extract specific dates or **date ranges**
-- Support for multiple time ranges in a single expression
-- Integration with Go's `time` package
-- Clean, idiomatic Go API
+- Support for multiple time ranges in single expressions
+- Idiomatic Go API with zero external dependencies
+- Active development - contributions welcome!
 
 ## 📦 Installation
 
@@ -85,15 +86,16 @@ The library can parse a wide variety of natural language time expressions, inclu
 - Combined expressions: "tomorrow from 9am to 5pm"
 - Recurring times: "every Monday", "every weekday"
 
-## How It Works
+## 🛠 Roadmap & Contribution
 
-The `naturaltime` library embeds the JavaScript code from chrono-node and executes it within a Go application using the [goja](https://github.com/dop251/goja) JavaScript runtime. This approach provides the rich natural language parsing capabilities of chrono-node while maintaining a pure Go API.
+We're actively working to achieve feature parity with the JS-based version! Help us:
+- Add new time expression patterns
+- Improve range detection
+- Optimize parsing performance
+- Expand test coverage
+
+Check our [issues](https://github.com/sho0pi/naturaltime/issues) for good first contributions!
 
 ## License
 
 MIT
-
-## Acknowledgments
-
-- [chrono-node](https://github.com/wanasit/chrono) - The underlying JavaScript natural language date parser
-- [goja](https://github.com/dop251/goja) - The JavaScript runtime in Go
