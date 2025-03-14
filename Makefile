@@ -13,3 +13,7 @@ package: build
 # Clean build artifacts
 clean:
 	@rm -rf dist naturaltime-js.tar.gz node_modules
+
+# Run tests
+test:
+	@go test -v ./...
