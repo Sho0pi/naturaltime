@@ -18,6 +18,18 @@ We're excited to announce active development on a pure Go implementation in the 
 
 Check out our [development roadmap](https://github.com/sho0pi/naturaltime/issues?q=is%3Aissue+label%3Anative-go) and consider contributing!
 
+### Native Go Implementation
+
+The native Go implementation is now available for basic date parsing. It supports:
+- Exact dates (e.g., "2023-01-15", "01/15/2023")
+- Relative dates (e.g., "today", "tomorrow", "yesterday")
+
+To use the native parser, simply create a new `NativeParser` instance:
+
+```go
+parser := naturaltime.NewNativeParser()
+date, err := parser.ParseDate("tomorrow")
+```
 ## ✨ Features
 
 - Parse natural language date expressions into `time.Time` objects

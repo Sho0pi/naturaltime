@@ -2,7 +2,7 @@ module github.com/sho0pi/naturaltime
 
 go 1.24.1
 
-require github.com/dop251/goja v0.0.0-20250307175808-203961f822d6
+require github.com/dop251/goja v0.0.0-20250309171923-bcd7cc6bf64c
 
 require (
 	github.com/dlclark/regexp2 v1.11.4 // indirect
